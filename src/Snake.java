@@ -25,18 +25,22 @@ public class Snake {
     }
 
     public void move(int x, int y){
-        snakeBody.add(0,(new SnakePart(getHeadX()+x,getHeadY()+y)));
-        snakeBody.remove(snakeBody.get(snakeBody.size()-1));
-    }
-
-    public void enlarge() {
-        snakeBody.add((new SnakePart(getHeadX(),getHeadY())));
+        SnakePart newHead = new SnakePart(this.getHeadX()+x, this.getHeadY()+y);
+        checkCollision(newHead);
+        if (!isAlive) return;
+        if (Game.game.getTarget().getX() == newHead.getX() &&
+        Game.game.getTarget().getY() == newHead.getY()) {
+            snakeBody.add(0,(new SnakePart(getHeadX()+x,getHeadY()+y)));
+            Game.game.createTarget();
+        } else {
+            snakeBody.add(0, (new SnakePart(getHeadX() + x, getHeadY() + y)));
+            snakeBody.remove(snakeBody.get(snakeBody.size() - 1));
+        }
     }
 
     public int getHeadX() {
         return snakeBody.get(0).getX();
     }
-
 
     public int getHeadY() {
         return snakeBody.get(0).getY();
@@ -58,6 +62,10 @@ public class Snake {
         this.direction = direction;
     }
 
-
+    public void checkCollision(SnakePart head) {
+        if (head.getX() > Game.game.getWidth()-1 || head.getX() < 0 ||
+                head.getY() > Game.game.getHeight()-1 || head.getY() < 0 || this.snakeBody.contains(head))
+        {this.setAlive(false);}
+    }
 
 }

@@ -6,11 +6,25 @@ public class Game {
     private int width;
     private Snake snake;
     private Target target;
+    public static Game game;
 
     public Game(int width, int height, Snake snake) {
         this.width = width;
         this.height = height;
         this.snake = snake;
+        game = this;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public Snake getSnake() {
+        return snake;
     }
 
     public void run() throws InterruptedException {
@@ -35,20 +49,9 @@ public class Game {
                     snake.setDirection(Direction.DOWN);
             }
 
-
             snake.move();
-            Thread.sleep(500);
-            if (snake.getHeadX() > width-1 || snake.getHeadX() < 0 ||
-                    snake.getHeadY() > height-1 || snake.getHeadY() < 0)
-            {snake.setAlive(false); break;}
-
             print();
-
-
-            if (snake.getHeadX() == target.getX() && snake.getHeadY() == target.getY()) {
-                createTarget();
-                snake.enlarge();
-            }
+            Thread.sleep(snake.snakeBody.size()*20 < 300 ? 520-snake.snakeBody.size()*20 : 200);
         }
 
         System.out.println("GAME OVER");
@@ -80,6 +83,9 @@ public class Game {
         System.out.println();
     }
 
+    public Target getTarget() {
+        return target;
+    }
     public void createTarget() {
         target = new Target((int) (Math.random()*width), (int) (Math.random()*height));
     }
